@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+	table tr th{
+        background-color: black;
+        color: white;
+    }
+    a{
+        cursor: pointer;
+    }
+    .textarea{
+    	display:none
+    }
+</style>
+</head>
+<body>
+<a th:href="@{/}">← List페이지로 이동하기</a><br>
+<h1>제목: [[${board.subject}]]</h1>
+<div>
+	<a>내용 : </a><a>[[${board.content}]]</a>
+</div>
+
+<ul>
+    <li th:each="answer : ${board.answer}">
+        <div>
+		    <span th:text="${answer.content}"></span><br>
+		    <a th:text="'답변 달기'"></a>
+		    <ul margin-left="50px">
+		    	<li th:each="reply : ${answer.replies}">
+		    		<a>[[${reply.content}]]</a><br>
+		    			<ul margin-left="50px">
+		    				<li th:each="lastAnswer : ${reply.replies}">
+		    					<span>[[${lastAnswer.content}]]</span>
+		    				</li>
+		    			</ul>
+		    		<a>답글달기</a>
+		    		<form id="replyForm-${answer.idx}" method="post" th:action="@{|/answer/create/${board.idx}/${reply.idx}|}">
+		        		<textarea id="replyContent-${answer.idx}" rows="2" cols="50" name="answer"></textarea>
+		        		<button>제출하기</button>
+		    		</form>
+		    	</li>
+		    </ul>
+		    <form id="replyForm-${answer.idx}" method="post" th:action="@{|/answer/create/${board.idx}/${answer.idx}|}">
+		        <textarea id="replyContent-${answer.idx}" rows="2" cols="50" name="answer"></textarea>
+		        <button>제출하기</button>
+		    </form>
+		</div>
+    </li>
+</ul>
+<div>
+    <form method="post" th:action="@{|/answer/create/${board.idx}|}">
+        <a>답글달기</a>
+        <textarea rows="2" cols="50" name="answer"></textarea>
+        <button>제출하기</button>
+    </form>
+</div>
+
+<h3>연관 게시글</h3>
+<table>
+	<tr><th width="400px">제목</th><th width="150px">날짜</th></tr>
+	<tr th:each="relatedBoard : ${relatedBoard}" th:if="${board.idx != relatedBoard.idx}"><td><a th:href="@{|/board/detail/${relatedBoard.idx}}">[[${relatedBoard.subject}]]</a></td><td>[[${#temporals.format(relatedBoard.createDate,'yy년MM월dd일')}]]</td></tr>
+</table>
+</body>
+</html>
