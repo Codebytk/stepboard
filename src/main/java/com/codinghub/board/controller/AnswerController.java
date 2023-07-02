@@ -22,13 +22,14 @@ public class AnswerController {
 	@PostMapping(value="/create/{idx}")
 	public String createanswer(@PathVariable("idx") Long boardIdx, @RequestParam("answer") String answerContent) {
 		this.answerService.createAnswer(boardIdx, null, answerContent);
-		System.out.println("parentIdx null");
-		 return "redirect:/board/detail/" + boardIdx;
+		System.out.println("answer");
+		return "redirect:/board/detail/" + boardIdx;
 	}
 	@PostMapping(value="/create/{b_idx}/{re_idx}")
 	public String createreanswer(@PathVariable("b_idx") Long boardIdx, @PathVariable("re_idx") Long parentIdx, @RequestParam("answer") String answerContent) {
 		this.answerService.createAnswer(boardIdx, parentIdx, answerContent);
 		System.out.println(parentIdx);
-		 return "redirect:/board/detail/" + boardIdx;
+		System.out.println("re answer"+parentIdx);
+		return "redirect:/board/detail/" + boardIdx;
 	}
 }

@@ -22,34 +22,43 @@
 <div>
 	<a>내용 : </a><a>[[${board.content}]]</a>
 </div>
-
 <ul>
-    <li th:each="answer : ${board.answer}">
+    <li th:each="answer : ${board.answer}" th:if="${answer.parent == null}">
         <div>
-		    <span th:text="${answer.content}"></span><br>
-		    <a th:text="'답변 달기'"></a>
-		    <ul margin-left="50px">
-		    	<li th:each="reply : ${answer.replies}">
-		    		<a>[[${reply.content}]]</a><br>
-		    			<ul margin-left="50px">
-		    				<li th:each="lastAnswer : ${reply.replies}">
-		    					<span>[[${lastAnswer.content}]]</span>
-		    				</li>
-		    			</ul>
-		    		<a>답글달기</a>
-		    		<form id="replyForm-${answer.idx}" method="post" th:action="@{|/answer/create/${board.idx}/${reply.idx}|}">
-		        		<textarea id="replyContent-${answer.idx}" rows="2" cols="50" name="answer"></textarea>
-		        		<button>제출하기</button>
-		    		</form>
-		    	</li>
-		    </ul>
-		    <form id="replyForm-${answer.idx}" method="post" th:action="@{|/answer/create/${board.idx}/${answer.idx}|}">
-		        <textarea id="replyContent-${answer.idx}" rows="2" cols="50" name="answer"></textarea>
-		        <button>제출하기</button>
-		    </form>
-		</div>
+            <span th:text="${answer.content}"></span><br>
+            <a th:text="'답변 달기'" th:onclick="'showReplyForm(' + ${answer.idx} + ', true)'"></a>
+            <div th:id="'re-' + ${answer.idx}" style="display: none;">
+                <form method="post" th:action="@{|/answer/create/${board.idx}/${answer.idx}|}">
+                    <textarea th:id="'replyContent-' + ${answer.idx}" rows="2" cols="50" name="answer"></textarea>
+                    <button>제출하기</button>
+                </form>
+            </div>
+            <ul>
+                <li th:each="reply : ${answer.replies}">
+                    <a th:text="${reply.content}"></a><br>
+                    <a th:onclick="'showReplyForm(' + ${reply.idx} + ', false)'">답글달기</a>
+                    <div th:id="'re-' + ${reply.idx}" style="display: none;">
+                        <form method="post" th:action="@{|/answer/create/${board.idx}/${reply.idx}|}">
+                            <textarea th:id="'replyContent-' + ${reply.idx}" rows="2" cols="50" name="answer"></textarea>
+                            <button>제출하기</button>
+                        </form>
+                    </div>
+                    <ul>
+                        <li th:each="lastAnswer : ${reply.replies}">
+                            <span th:text="${lastAnswer.content}"></span>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
     </li>
 </ul>
+<script>
+    function showReplyForm(replyIdx) {
+        var replyDiv = document.getElementById("re-" + replyIdx);
+        replyDiv.style.display = "block";
+    }
+</script>
 <div>
     <form method="post" th:action="@{|/answer/create/${board.idx}|}">
         <a>답글달기</a>

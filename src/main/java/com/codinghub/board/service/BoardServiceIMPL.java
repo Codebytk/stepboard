@@ -18,15 +18,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class BoardServiceIMPL implements BoardService {
-
-	private final BoardRepository boardRepository;
 	
-		
-	@Override
-	public List<Board> AllBoard() {
-		List<Board> board = this.boardRepository.findAll();
-		return board;
-	}
+    private final BoardRepository boardRepository;
+
 
 	@Override
 	public Optional<Board> selectBoard(Long idx) {
@@ -67,7 +61,6 @@ public class BoardServiceIMPL implements BoardService {
 	            boardWord.put(getword, boardWord.get(getword) + 1);
 	        }
 	    }
-	    System.out.println(boardWord);
 	    
 	    List<String> relationWords = new ArrayList<>();
 	    int cutsize = (int) (boardWord.size() * 0.6);
@@ -99,7 +92,6 @@ public class BoardServiceIMPL implements BoardService {
 	                count++;
 	                if (count >= 2) {
 	                    relatedWords.add(boardWord);
-	                    System.out.println(boardWord);
 	                    count = 0;
 	                    break;
 	                }
@@ -113,7 +105,6 @@ public class BoardServiceIMPL implements BoardService {
 	                wordcount++;
 	                if (wordcount >= 2) {
 	                    relatedBoards.add(_board);
-	                    System.out.println(_board.getIdx());
 	                    break;
 	                }
 	            }
@@ -121,4 +112,12 @@ public class BoardServiceIMPL implements BoardService {
 	    }
 		return relatedBoards;
 	}
+
+	@Override
+	public List<Board> AllBoard() {
+		List<Board> board = this.boardRepository.findAll();
+		return board;
+	}
+
+	
 }
